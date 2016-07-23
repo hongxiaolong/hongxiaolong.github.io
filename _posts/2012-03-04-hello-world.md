@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Hello world!
-category: default
+category: sample
 ---
 
 这是一篇测试文章，你可以在`_posts`目录修改或删除它。

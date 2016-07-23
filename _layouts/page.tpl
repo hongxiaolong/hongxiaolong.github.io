@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>{{ site.name }}{% if page.title %} / {{ page.title }}{% endif %}</title>
 <link href="http://{{ site.host }}/feed.xml" rel="alternate" title="{{ site.name }}" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
 {% for style in page.styles %}<link rel="stylesheet" type="text/css" href="{{ style }}" />
@@ -29,6 +29,8 @@
     <h2>
     <a href="/">{{ site.name }}</a>
     <a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a>
+    <a href="{{ site.meta.author.weibo }}" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>
+    <a href="https://github.com/{{ site.meta.author.github }}" title="GitHub"><i class="fa fa-github-square" style="color:black"></i></a>
     </h2>
 
     <nav class="block">
@@ -56,7 +58,7 @@
 
     <div class="block block-license">
         <h3>Copyright</h3>
-        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+        <p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="/images/copyright.png" /></a></p>
     </div>
 
     <div class="block block-thank">
