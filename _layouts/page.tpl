@@ -20,12 +20,16 @@
     {{ content }}
 
     <footer>
-        <p>&copy; Since 2012</p>
+        <p>&copy; Since 2016</p>
     </footer>
 </div>
 
 <aside>
-    <h2><a href="/">{{ site.name }}</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+    <img align="middle" src="/images/dog.jpg" alt="dog">
+    <h2>
+    <a href="/">{{ site.name }}</a>
+    <a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a>
+    </h2>
 
     <nav class="block">
         <ul>
@@ -45,7 +49,9 @@
             {% if site.meta.author.gravatar %}<img src="{{ site.meta.gravatar}}{{ site.meta.author.gravatar }}?s=48" />{% endif %}
             <figcaption><strong>{{ site.meta.author.name }}</strong></figcaption>
         </figure>
-        <p>Write something about yourself.</p>
+        {% if site.meta.author.desc %}
+        <p>{{ site.meta.author.desc }}</p>
+        {% endif %}
     </div>
 
     <div class="block block-license">
