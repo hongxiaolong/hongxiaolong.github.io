@@ -9,14 +9,15 @@ desc: 在否定中进步，在思考中成长
 
 custom:
     category:
-        default: tech
-        another: thinking
+        tech: tech
+        thinking: thinking
         sample: sample
+
     categories:
-      - name:  default
+      - name:  tech
         title: tech
 
-      - name:  another
+      - name: thinking
         title: thinking
 
     scrollingLoadCount: 2                          # 滚屏自动加载文章数量，“0”为关闭
@@ -31,6 +32,7 @@ meta:
         github: hongxiaolong                        # GitHub账号
         weibo: http://weibo.com/changingalot/       # 新浪微博
         gravatar: 3b99651ab65e0f96f4bd68075fd1e13c  # Gravatar头像标识
+        analytics: UA-81206656-1                    # Google Analytics ID
 
     disqus: disqus.com/embed.js                     # Disqus评论的JS地址
     gapi: http://www.google.com/jsapi               # Google API地址

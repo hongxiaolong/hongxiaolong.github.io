@@ -18,7 +18,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-81206656-1', 'auto');
+  ga('create', '{{ site.meta.author.analytics }}', 'auto');
   ga('send', 'pageview');
 </script>
 </head>
@@ -29,7 +29,7 @@
     {{ content }}
 
     <footer>
-        <p>&copy; Since 2016</p>
+        <p>&copy; Since 2016 by {{ site.meta.author.name }}</p>
     </footer>
 </div>
 
