@@ -205,6 +205,106 @@ NGINX 1.9版本增加了stream模块，使得NGINX也支持四层的TCP, UDP负�
   #00:05      0          0        1         0
   ~~~
 
+#### 会话保持：
+
+由于HTTP是无状态的协议，所以对于需要记录状态信息如用户登录等时，Cookie和Session的支持就至关重要，我们这里不讨论两者的区别，还是关注NGINX和NGINX PLUS对于Session的特性支持。
+
+开源NGINX可以很简单粗暴地利用IP_HASH策略将同一个客户端的请求包分流至同一个上游服务器，这样的好处是同一个客户端的请求从登录到退出一直由同一个上游应用服务器处理，自然也不存在Session的一致性问题了。很明显，IP_HASH的方式对于NGINX的负载均衡造成了影响，相比较Round-Robin等，可能造成上游服务器之间的热度不均，所以很多优化方案会将Session统一暂存至Memcached、MySQL或者其它的存储中。
+
+NGINX PLUS增加了新的特性来支持更好的会话保持服务，可以通过Cookie、Learn和Routes方式实现：
+
+- Cookie
+
+  ~~~
+  upstream backend {
+      server webserver1;
+      server webserver2;
+  
+      sticky cookie srv_id expires=1h domain=.example.com path=/;
+  }
+  ~~~
+
+  配置项：
+
+  * expires=time：告知浏览器Cookie的有效期，即在有效期内浏览器应保持Cookie
+
+  * domain=domain: Cookie的有效域
+
+  * httponly：Cookie的属性，只支持HTTP协议
+
+  * secure： Cookie的属性，支持安全特性
+
+  * path=path： Cookie的存储路径
+
+  顾名思义，Cookie方式就是NGINX PLUS利用Cookie的KEY-VALUE保存相关会话信息，根据srv_id将请求分流至对应的上游服务器。这种方式其实和开源NGINX的IP_HASH策略相似，同一个客户端的请求由同一台上游服务器负责，当该上游服务器不可用时，NGINX PLUS将重新选择另一台上游服务器。
+
+- Learn
+
+  ~~~
+  upstream backend {
+   server webserver1;
+   server webserver2;
+
+   sticky learn
+       create=$upstream_cookie_sessionid
+       lookup=$cookie_sessionid
+       zone=client_sessions:1m
+       timeout=1h;
+  }
+  ~~~
+
+  配置项：
+
+  * create： Session的标识方式
+
+  * lookup：Session的检索方式
+
+  * zone： Session将被存储至大小为1M的共享内存client_sessions中，64位环境中 1M ≈ 8000 sessions
+
+  NGINX PLUS会在发送响应的同时创建某些相关信息，将其写入客户端Cookie中，当客户端带着新的Cookie请求NGINX PLUS时，NGINX PLUS将根据Cookie中的sessionid检索对应的上游服务器，并将该对应信息存储至共享区中，当下一次请求到达的时候，就可以通过Cookie和共享区中的信息，将请求直接分流至对应的服务器，这样也可以保证会话一致性，美其名曰“自动学习”。
+
+- Routes
+
+  ~~~
+  upstream backend {
+   server webserver1 route=a;
+   server webserver2 route=b;
+
+   # $var1 and $var2 are run-time variables, calculated for each request
+   sticky route $var1 $var2;
+  }
+  ~~~
+
+  配置项：
+
+  * route: 将请求路由至对应的上游服务器
+
+  ~~~
+  map $cookie_jsessionid $route_cookie {
+      ~.+\.(?P<route>\w+)$ $route;
+  }
+  
+  map $request_uri $route_uri {
+      ~jsessionid=.+\.(?P<route>\w+)$ $route;
+  }
+  
+  upstream backend {
+      server backend1.example.com route=a;
+      server backend2.example.com route=b;
+  
+      sticky route $route_cookie $route_uri;
+  }
+  ~~~
+
+  示例如上：
+
+  当NGINX PLUS收到来自客户端的请求时，将根据Cookie中的KEY-VALUE信息，同时利用map检索对应的变量，将请求路由至对应的上游服务器来保持会话。
+
+  上例中NGINX PLUS可以根据Cookie中的JSESSIONID或者当JSESSIONID未定义时通过URI来分流请求。
+
+  除了上述特性外，NGINX PLUS还提供了drain来支持当upstream配置变更时的会话保持服务，这和real server的down、backup配置有些类似，只不过当drain生效时原来建立的会话将继续保持，新的会话则不会再被分流至drain的服务器。
+
+
   未完待续..
 
 
