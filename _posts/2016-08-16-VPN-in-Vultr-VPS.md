@@ -134,7 +134,49 @@ Shadowsocks应该是PC上最多的选择吧，安装简单，使用便捷，在�
   yikyo/shadowsocks-client          shadowsocks-client                              0                    [OK]
   ~~~
 
-  可以直接采用上述docker镜像安装shadowsocks，我在Vultr VPS - CentOS 7.0 x64上尝试过上述若干镜像，事实验证无法顺利安装或者运行shadowsocks服务，而且不管Python安装还是脚本安装，已经足够简单便捷，所以有兴趣的同学自己尝试吧，有机会我再继续完善。
+  可以直接采用上述docker镜像安装shadowsocks，我在Vultr VPS - CentOS 7.0 x64上尝试过上述若干镜像，*事实验证无法顺利安装或者运行shadowsocks服务，而且不管Python安装还是脚本安装，已经足够简单便捷，所以有兴趣的同学自己尝试吧，有机会我再继续完善（2016年8月18日已完善，如下）*。
+
+  其实看了下STARS最多的oddrationale/docker-shadowsocks源码，简单得令人发指..^^，所以我立马来更新一下这段，代码可以参考[作者Github](https://github.com/oddrationale/docker-shadowsocks)。
+
+  Docker安装shadowssocks如下：
+
+  ~~~
+
+  # 首先在我的Vultr VPS上安装docker，其它平台或其它Linux发行版自行观摩[官方文档](https://docs.docker.com/engine/installation/)
+
+  $ sudo yum install docker
+
+  # 启动docker服务：
+
+  $ sudo service docker start
+  
+  # 拉取docker镜像
+
+  $ sudo docker pull oddrationale/docker-shadowsocks
+
+  # docker启动shadowsocks容器，PORT和PASSWORD自行填写..
+
+  $ sudo docker run --name shadowsocks-vpn-server -d -p $PORT:$PORT oddrationale/docker-shadowsocks -s 0.0.0.0 -p $PORT -k $PASSWORD -m aes-256-cfb
+
+  # 可以通过docker容器的top命令或者日志观察shadowsocks服务状况
+
+  $ sudo docker top shadowsocks-vpn-server
+
+  $ sudo docker logs shadowsocks-vpn-server
+
+  ~~~
+
+  阅读过该docker镜像的Dockfile后，其实作者也就是在docker里安装了python-pip和shadowsocks，然后直接在bash中启动shadowsocks服务，仅此而已:
+
+  ~~~
+
+  # 启动shadowsocks服务，后面的参数可以直接跟在启动命令之后，也可放在config.json中
+
+  $ /usr/local/bin/ssserver -s 0.0.0.0 -p $PORT -k $PASSWORD -m aes-256-cfb
+
+  ~~~
+
+  如果镜像在安装过程中报错，可以自行审阅日志，毕竟没几句命令..我在Vultr CentOS 7.0 x64中报过device mapper挂载错误，但是我查看过device mapper挺正常的..
 
 ### IPsec
 
@@ -149,7 +191,7 @@ IPsec的安装和配置远比Shadowsocks复杂，而且换个环境可能配置�
 ~~~
 # 首先在我的Vultr VPS上安装docker，其它平台或其它Linux发行版自行观摩[官方文档](https://docs.docker.com/engine/installation/)
 
-$ sudo yum install docker-engine
+$ sudo yum install docker
 
 # 启动docker服务：
 
@@ -220,13 +262,16 @@ OK，至此大功告成，VPN in Vultr VPS已经安装成功。
 Shadowsocks的客户端配置很简单，IPsec记得需要填写两个密码，如上环境变量的KEY-VALUE，一个是VPN_PASSWORD的值，另一个是VPN_IPSEC_PSK的值，还是比较简单的，就不贴图了..
 
 
+**言而总之，本文推荐docker安装shadowsocks和IPsec，简单可控，统一管理~~**
+
+
 ### 国际惯例：
 
 同学们如有VPN的需求，请参考上述教程，鉴于我目前在用Vultr，贴个邀请码吧，请从以下链接点击注册：
 
 - 2016年夏季促销：
 
-  [Summer Promo Code](http://www.vultr.com/?ref=6953793-3B): http://www.vultr.com/?ref=6953793-3B
+  [Summer Promo Code](http://www.vultr.com/?ref=6953793-3B): *http://www.vultr.com/?ref=6953793-3B*
   
   For a Limited Time - Give $20, Get $30!
   
@@ -240,7 +285,7 @@ Shadowsocks的客户端配置很简单，IPsec记得需要填写两个密码，�
 
 - 长期有效：
 
-  [Linking Code](http://www.vultr.com/?ref=6953792): http://www.vultr.com/?ref=6953792
+  [Linking Code](http://www.vultr.com/?ref=6953792): *http://www.vultr.com/?ref=6953792*
   
   Refer Vultr.com and earn $10 per paid signup!
   
