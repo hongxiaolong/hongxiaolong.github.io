@@ -1,10 +1,11 @@
+markdown: kramdown
 safe: false
 permalink: /posts/:title.html
 exclude:
   - README.md
 
 name: 狼烟
-host: hongxiaolong.github.io
+host: hongxiaolong.com
 desc: 在否定中进步，在思考中成长
 
 custom:
