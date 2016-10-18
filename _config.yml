@@ -21,13 +21,16 @@ custom:
       - name: thinking
         title: thinking
 
-    scrollingLoadCount: 2                          # 滚屏自动加载文章数量，“0”为关闭
+      - name: sample
+        title: sample
+
+    scrollingLoadCount: 1                          # 滚屏自动加载文章数量，“0”为关闭
 
 meta:
     author:
         name: hongxiaolong
         desc: 愿风指引你的道路
-        email: hongxiaolong.info@gmail.com
+        email: imhongxiaolong@gmail.com
         disqus: hongxiaolong                        # Disqus缩略标识
         gcse: 001728465442046369016:yoween5qzfo     # Google自定义搜索标识ID
         github: hongxiaolong                        # GitHub账号

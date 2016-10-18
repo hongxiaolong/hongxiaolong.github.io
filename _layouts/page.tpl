@@ -89,10 +89,12 @@
 
 <script src="/assets/js/elf-0.5.0.min.js"></script>
 <script src="/assets/js/highlight.min.js"></script>
-
 <script src="/assets/js/site.js"></script>
-{% for script in page.scripts %}<script src="{{ script }}"></script>
+
+{% for script in page.scripts %}
+<script src="{{ script }}"></script>
 {% endfor %}
+
 <script>
 site.URL_GOOGLE_API = '{{site.meta.gapi}}';
 site.URL_DISCUS_COMMENT = '{{ site.meta.author.disqus }}' ? 'http://{{ site.meta.author.disqus }}.{{ site.meta.disqus }}' : '';
