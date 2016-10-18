@@ -209,7 +209,7 @@ NGINX 1.9版本增加了stream模块，使得NGINX也支持四层的TCP, UDP负�
 
 由于HTTP是无状态的协议，所以对于需要记录状态信息如用户登录等时，Cookie和Session的支持就至关重要，我们这里不讨论两者的区别，还是关注NGINX和NGINX PLUS对于Session的特性支持。
 
-开源NGINX可以很简单粗暴地利用IP_HASH策略将同一个客户端的请求包分流至同一个上游服务器，这样的好处是同一个客户端的请求从登录到退出一直由同一个上游应用服务器处理，自然也不存在Session的一致性问题了。很明显，IP_HASH的方式对于NGINX的负载均衡造成了影响，相比较Round-Robin等，可能造成上游服务器之间的热度不均，所以很多优化方案会将Session统一暂存至Memcached、MySQL或者其它的存储中。
+开源NGINX可以很简单粗暴地利用IP_HASH策略将同一个客户端的请求分流至同一个上游服务器，这样的好处是同一个客户端的请求从登录到退出一直由同一个上游应用服务器处理，自然也不存在Session的一致性问题了。很明显，IP_HASH的方式对于NGINX的负载均衡造成了影响，相比较Round-Robin等，可能造成上游服务器之间的热度不均，所以很多优化方案会将Session统一暂存至Memcached、MySQL或者其它的存储中。
 
 NGINX PLUS增加了新的特性来支持更好的会话保持服务，可以通过Cookie、Learn和Routes方式实现：
 
@@ -277,7 +277,8 @@ NGINX PLUS增加了新的特性来支持更好的会话保持服务，可以通�
 
   配置项：
 
-  * route: 将请求路由至对应的上游服务器
+  * route: 路由规则，将请求路由至对应的上游服务器
+
 
   ~~~
   map $cookie_jsessionid $route_cookie {
@@ -298,12 +299,15 @@ NGINX PLUS增加了新的特性来支持更好的会话保持服务，可以通�
 
   示例如上：
 
-  当NGINX PLUS收到来自客户端的请求时，将根据Cookie中的KEY-VALUE信息，同时利用map检索对应的变量，将请求路由至对应的上游服务器来保持会话。
+  当NGINX PLUS收到来自客户端的请求时，将根据Cookie中的KEY-VALUE信息，同时利用NGINX的map机制检索对应的变量，将请求路由至对应的上游服务器来保持会话。
 
   上例中NGINX PLUS可以根据Cookie中的JSESSIONID或者当JSESSIONID未定义时通过URI来分流请求。
 
-  除了上述特性外，NGINX PLUS还提供了drain来支持当upstream配置变更时的会话保持服务，这和real server的down、backup配置有些类似，只不过当drain生效时原来建立的会话将继续保持，新的会话则不会再被分流至drain的服务器。
 
+除了上述特性外，NGINX PLUS还提供了drain来支持当upstream配置变更时的会话保持服务，drain的配置和real server的down、backup有些类似，而其机制则和NGINX的优雅重启有点异曲同工之妙，当drain生效时原来建立的会话将继续保持，新的会话将被分流至另外的的上游应用服务器。
+
+
+### 
 
   未完待续..
 

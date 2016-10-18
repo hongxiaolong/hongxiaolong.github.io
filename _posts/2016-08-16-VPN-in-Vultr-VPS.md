@@ -134,7 +134,7 @@ Shadowsocks应该是PC上最多的选择吧，安装简单，使用便捷，在�
   yikyo/shadowsocks-client          shadowsocks-client                              0                    [OK]
   ~~~
 
-  可以直接采用上述docker镜像安装shadowsocks，我在Vultr VPS - CentOS 7.0 x64上尝试过上述若干镜像，*事实验证无法顺利安装或者运行shadowsocks服务，而且不管Python安装还是脚本安装，已经足够简单便捷，所以有兴趣的同学自己尝试吧，有机会我再继续完善（2016年8月18日已完善，如下）*。
+  可以直接采用上述docker镜像安装shadowsocks，我在Vultr VPS - CentOS 7.0 x64上尝试过上述若干镜像，~~*有时候无法顺利安装或者运行shadowsocks服务，而且不管Python安装还是脚本安装，已经足够简单便捷，所以有兴趣的同学自己尝试吧，有机会我再继续完善（2016年8月18日已完善，如下）*~~。
 
   其实看了下STARS最多的oddrationale/docker-shadowsocks源码，简单得令人发指..^^，所以我立马来更新一下这段，代码可以参考[作者Github](https://github.com/oddrationale/docker-shadowsocks)。
 

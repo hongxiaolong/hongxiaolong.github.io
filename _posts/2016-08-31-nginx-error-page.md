@@ -537,7 +537,7 @@ ngx_http_send_error_page(ngx_http_request_t *r, ngx_http_err_page_t *err_page)
 
 ngx_http_send_error_page负责真正处理本文开头所总结的三种情况：
 
-- 内部错误页：将会调用ngx_http_internal_redirect实现内部跳转，其真正的逻辑是调用static模块完成静态文件的查找和读取
+- 内部错误页：将会调用ngx_http_internal_redirect实现内部跳转，其真正的逻辑是调用static模块完成静态文件的查找和读取或者反向代理模块完成响应的生成
 
 - 外部错误页：NGINX对于外部错误页的处理比较简单，直接重定向，由客户端的浏览器完成跳转
 
@@ -564,7 +564,7 @@ ngx_http_internal_redirect(ngx_http_request_t *r,
 {
     ngx_http_core_srv_conf_t  *cscf;
 
-    /* 内部重定向，NGINX未防止请求的无限内部跳转，限定了内部重定向次数的上限为NGX_HTTP_MAX_URI_CHANGES + 1 */
+    /* 内部重定向，NGINX为防止请求的无限内部跳转，限定了内部重定向次数的上限为NGX_HTTP_MAX_URI_CHANGES + 1 */
     r->uri_changes--;
 
     if (r->uri_changes == 0) {
@@ -630,7 +630,7 @@ ngx_http_named_location(ngx_http_request_t *r, ngx_str_t *name)
 
     /* 增加主请求的引用数，这个字段主要是在ngx_http_finalize_request调用的一些结束请求和连接的函数中使用 */
     r->main->count++;
-    /* 内部重定向，NGINX未防止请求的无限内部跳转，限定了内部重定向次数的上限为NGX_HTTP_MAX_URI_CHANGES + 1 */
+    /* 内部重定向，NGINX为防止请求的无限内部跳转，限定了内部重定向次数的上限为NGX_HTTP_MAX_URI_CHANGES + 1 */
     r->uri_changes--;
 
     if (r->uri_changes == 0) {
@@ -832,3 +832,4 @@ NGINX错误页面的源码流程基本上分析完毕，总结一下：
 
 - 未配置：找不到错误页面的配置项，响应内容为NGINX默认的页面内容
 
+{% include references.md %}
